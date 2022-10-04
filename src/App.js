@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+
+  constructor(){
+    super()
+
+    this.state = {
+      users:[],
+      isLoading: true,
+    };
+  }
+
+  componentDidMount(){
+    fetch("https://jsonplaceholder.typicode.com/users")
+    .then(response => response.json())
+    .then(data => this.setState({users: data}))
+    .finally(()=> {
+      this.setState({isLoading: false});
+    });
+  }
+
+  render(){
+    const {users, isLoading} = this.state;
+
+    if (isLoading){
+      return(
+        <div className="App">
+          <p>Loading...</p>
+        </div>
+      );
+    }
+    return (
+      <div className="App">
+        <h1>Belajar API</h1>
+        <hr />{users.map((user) => {
+          return <p key={user.id}>Name : {user.name} | User Name: {user.username} | Email: {user.email}</p>
+        })}
+      </div>
+    )
+  }
+
 }
 
 export default App;
